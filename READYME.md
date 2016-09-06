@@ -59,6 +59,57 @@ angular.module('app').register.directive('imgBigger', function () {
 * ng-show 中写表达式 表达式中不能出现空格
 ```
 <div ng-show="check_status=='123' || check_status=='2'" class="text-center"> right
-<div ng-show="check_status == '123' || check_status == '2'" class="text-center">
-error
+<div ng-show="check_status == '123' || check_status == '2'" class="text-center">error
+```
+
+* 详情截取文本缩略
+```
+<span ng-bind-html="(data.desc | limitTo:15)"></span><span ng-if="data.desc.length > 15">....</span>
+```
+
+* get post 通过 $http 读取数据 差异
+```
+get方式
+return $http.get('manage/sqpaper/order',{
+   params: {
+       'limit': _numPerPage,
+       'page': _currentPage,
+       'option': 'getList',
+       'search': $scope.search
+   }
+   });
+post方式读取
+return $http({
+   method: 'POST',
+   url: 'manage/sqpaper/order',
+   data: $httpParamSerializerJQLike({        //$httpParamSerializerJQLike作用同 $.param
+           'limit': _numPerPage,
+           'page': _currentPage,
+           'option': 'getList',
+           'search': $scope.search
+       }
+   )
+})
+```
+
+* ng-submit ng-click 均可以直接写 表达式  不需要花括号
+```
+    ng-click="isPass = 1;isButton = 0;status = 'success'"
+```
+
+* ng-if and ng-show.   如下代码，ng-show改成ng-if的话， ng-click中的表达式未生效。原因 ： 待解决
+```
+<form name="confirmForm" class="form-horizontal form-validation" role="form" novalidate ng-submit="confirmSubmit(status)">
+    <div class="form-group">
+        <label for="check_desc" class="col-sm-3 control-label">最终发放</label>
+        <div class="col-sm-9">
+            <p class="form-control-static">{{vm.orderRow.money}}</p>
+        </div>
+    </div>
+
+    <div ng-show="vm.orderRow.default_grant_status == '1'" class="btn-group btn-group-justified" role="group" aria-label="...">
+        <button type="submit" class="md-raised md-primary btn md-button md-ink-ripple" ng-click="status = 'success'">成功</button>
+        <button type="submit" class="md-raised md-warn btn md-button md-ink-ripple" ng-click="status = 'fail'">失败</button>
+    </div>
+</form>
 ```
